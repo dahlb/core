@@ -116,6 +116,7 @@ def get_plug_devices(hass, entity_configs):
     """Produce list of plug devices from config entities."""
     for entity_id, entity_config in entity_configs.items():
         if (state := hass.states.get(entity_id)) is None:
+            _LOGGER.debug("skipping %s, state of none", entity_id)
             continue
         name = entity_config.get(CONF_NAME, state.name)
 
@@ -133,6 +134,7 @@ def get_plug_devices(hass, entity_configs):
         else:
             power = 0.0
         last_changed = state.last_changed.timestamp()
+        _LOGGER.debug("unique_id:%s, last_changed:%s, name:%s, power:%s", entity_config[CONF_UNIQUE_ID], last_changed, name, power) 
         yield PlugInstance(
             entity_config[CONF_UNIQUE_ID],
             start_time=last_changed,
